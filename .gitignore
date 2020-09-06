@@ -1,2 +1,4 @@
 .DS_Store
-pdfdetach/bin
+Gemfile.lock
+*/bin
+tmp

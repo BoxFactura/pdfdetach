@@ -1,6 +1,5 @@
 #!/bin/bash
 
-current_dir=$PWD
 basedir=$PWD/$PKG/bin
 target=$(cat /etc/issue | awk '/Ubuntu/{print $2}' | sed 's/\.[0-9]$//g')
 

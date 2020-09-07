@@ -1,4 +1,6 @@
+.backup
 .DS_Store
 Gemfile.lock
+pdfdetach/.gitignore
 */bin
 tmp

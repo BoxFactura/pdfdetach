@@ -1,8 +1,6 @@
 FROM ubuntu:XX.04 as vXX
 
-RUN apt-get update
-RUN apt-get install -y sudo make
-RUN apt-get install -y ruby bundler
+RUN apt-get update && apt-get install -y git sudo make ruby bundler
 
 RUN adduser --disabled-password --gecos '' docker
 RUN adduser docker sudo

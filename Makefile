@@ -18,16 +18,29 @@ test-all:
 
 try-ruby:
 	@rm -f Gemfile.lock
-	@bundler && ruby main.rb
-
-install:
-	@./install.sh
+	bundler && ruby main.rb
 
 dev: build
 	@docker run -v $(PWD):/app --rm -it $(PKG) $(CMD)
 
 v\:%:
 	@make -s dev TAG=v$* CMD='bash -c "make test-all;exit"'
+
+release:
+	@./release.sh
+
+define RUBY_VERSION_FILE
+class PDFDetach
+$(shell cat $(PWD)/$(PKG)/lib/$(PKG)/version.rb | grep VERSION)
+  LIB_TARGET = '$(subst v,,$(TAG)).04'
+end
+endef
+
+export RUBY_VERSION_FILE
+
+install:
+	@echo "$$RUBY_VERSION_FILE" > $(PWD)/$(PKG)/lib/$(PKG)/version.rb
+	@(((ls $(PWD)/$(PKG)/bin | grep .) > /dev/null 2>&1) || ./install.sh) || true
 
 test: install
 	@make -s test:$(shell cat /etc/issue | awk '/Ubuntu/{print $$2}' | sed 's/\..*$$//g')

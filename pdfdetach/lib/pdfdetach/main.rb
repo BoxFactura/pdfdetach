@@ -1,7 +1,5 @@
 require 'pathname'
 
-LIB_TARGET = '20.04'
-
 class PDFDetach
   def initialize(filepath)
     @src = filepath

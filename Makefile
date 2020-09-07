@@ -1,6 +1,10 @@
 PWD=$(shell pwd)
 
 TAG=v20
+
+MAJOR=0
+PATCH=0
+
 CMD=bash
 TASK=install
 
@@ -10,15 +14,15 @@ ARGS=-list example_041.pdf
 
 export PKG DEPS
 
-.PHONY: ? all test test-bin test-all try-ruby dev target release install build
+.PHONY: ? all test test-bin check try-ruby dev target release install build
 
 all:
 	@make -s v:20 v:18 v:16
 
 test:
-	@make -s all TASK=test-all
+	@make -s all TASK=check
 
-test-all:
+check:
 	@rm -rf tmp
 	@make -s test-bin try-ruby
 
@@ -34,7 +38,7 @@ v\:%:
 
 define RUBY_VERSION_FILE
 class PDFDetach
-$(shell cat $(PWD)/$(PKG)/lib/$(PKG)/version.rb | grep VERSION)
+  VERSION = '$(MAJOR).$(subst v,,$(TAG)).$(PATCH)'
   LIB_TARGET = '$(subst v,,$(TAG)).04'
 end
 endef
@@ -49,11 +53,12 @@ fetch:
 		git checkout master))
 
 prune:
+	@(git push --delete origin $(TAG) v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) > /dev/null 2>&1) || true
 	@(git worktree remove $(PKG) --force > /dev/null 2>&1) || true
 	@(git checkout -- $(PKG) > /dev/null 2>&1) || true
 	@(git branch -D $(TAG) > /dev/null 2>&1) || true
 
-target:
+target: $(PWD)/$(PKG)/bin/$(subst v,,$(TAG)).04
 	@(((git branch | grep $(TAG)) > /dev/null 2>&1) || make -s fetch) || true
 
 release: target version
@@ -62,10 +67,12 @@ release: target version
 	@(git worktree add $(PKG) $(TAG) && (cp -r .backup/* $(PKG) > /dev/null 2>&1)) || true
 
 	@cd $(PKG) && echo "bin/*\n!bin/$(subst v,,$(TAG)).04" > .gitignore && git add .
-	@cd $(PKG) && git commit -m "Release $(TAG) ($(shell date))" || true
+	@cd $(PKG) && git commit -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) ($(shell date))" || true
 	@rm -rf .backup
 
 	@git push origin $(TAG) -f || true
+	@git tag -f -a v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) $(TAG) -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH)" || true
+	@git push -f origin : v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) || true
 
 install:
 	@./install.sh

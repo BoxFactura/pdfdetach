@@ -10,7 +10,7 @@ if ! which $PKG > /dev/null; then
     cd $basedir/$target/lib
     sudo apt-get install -y $DEPS
     cp $(which $PKG) ..
-    libs=$(ldd $(which $PKG) | sed 's/ (.*$//g' | sed 's/^.*=> //g' | tr -d ' ' | awk '/\.so/{print $1}')
+    libs=$(ldd $(which $PKG) | sed 's/ (.*$//g' | sed 's/^.*=> //g' | tr -d ' ' | awk '/^\/.*\.so/{print $1}')
 
     for file in ${libs[@]}; do
       cp $file .

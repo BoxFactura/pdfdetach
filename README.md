@@ -12,8 +12,8 @@ On the target system: overloading the `LD_LIBRARY_PATH` variable allows to execu
 - Now we have the binaries, they are copied inside our `bin` directory:
   - they are released using `git worktree` &mdash; it turns out you can use directories as branches, like for `gh-pages` we're using it for pushing final files only
   - they are ignored by default on the main repository &mdash; but a `.gitignore` is placed inside this new branch with `bin/*` to sill ignore all binaries and, i.e. `!bin/20.04` to actually skip the desired version of binaries
-- The ruby-gem is written as usual but the `version.rb` gets rewritten on release time to match the target environment, a `LIB_TARGET` constant is set as i.e. `20.04`  (or `18.04`, etc.)
-  - you don't need to modify this file, the `make release`  task will setup that for you &mdash; also you can set `MAJOR` and `PATCH` for specific version values, the `MINOR` will be `20`, `18` or `16` according the target runtime, e.g. `make release TAG=v16 PATCH=2 MAJOR=1` will be `1.16.2`
+- The ruby-gem is written as usual but the `version.rb` gets rewritten on release time to match the target environment, a `LIB_TARGET` constant is set as i.e. `20.04` (or `18.04`, etc.)
+  - you don't need to modify this file, the `make release` task will setup that for you &mdash; also you can set `MAJOR` and `PATCH` for specific version values, the `MINOR` will be `20`, `18` or `16` according the target runtime, e.g. `make release TAG=v16 PATCH=2 MAJOR=1` will be `1.16.2`
   - probably you can use something else, not just ruby &mdash; try hacking the `Makefile` to match another stack, just keep in mind the `bin` folder shouls remain inside the created directory!
   - [official release as ruby-gem is still pending...]
 

@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
+# :nodoc:
 class PDFDetach
-  def initialize(filepath)
+  # @param filepath [String]
+  # @param binary_path [String]
+  def initialize(filepath, binary_path: '')
     @src = filepath
     @base_path = Pathname.new("#{__dir__}/../../bin/#{LIB_TARGET}").cleanpath
-    @binary_path = `which pdfdetach`.chop
+    @binary_path = binary_path
   end
 
   def get_opts(hash)
-    args = ''
+    args = String.new
     args << " -o #{hash[:output]} " if hash[:output]
     args << " -enc #{hash[:encoding]} " if hash[:encoding]
     args << " -opw #{hash[:owner_password]} " if hash[:owner_password]
@@ -16,20 +21,17 @@ class PDFDetach
     args
   end
 
-  def list(opts = {})
+  def list
     result = run("-list #{@src}")
-    files = []
 
-    if result[:ok]
-      lines = result[:out].split("\n")
-      for line in lines
-        if line =~ /^(\d+):/
-          files << line.match(/^(\d+): (.+?)$/) { |m| m[2] }
-        end
-      end
-    end
-
-    files
+    files = if result[:ok]
+              result[:out].split("\n").map do |line|
+                next line.match(/^(\d+): (.+?)$/) { |m| m[2] } if line =~ /^(\d+):/
+              end
+            else
+              []
+            end
+    files.compact
   end
 
   def save(offset, opts = {})
@@ -45,12 +47,12 @@ class PDFDetach
   end
 
   def run(args)
-    output = if @binary_path.empty?
-      `LD_LIBRARY_PATH=#{@base_path}/lib #{@base_path}/pdfdetach #{args}`
-    else
-      `#{@binary_path} #{args}`
-    end
+    output = if @binary_path&.empty?
+               `LD_LIBRARY_PATH=#{@base_path}/lib #{@base_path}/pdfdetach #{args}`
+             else
+               `#{@binary_path} #{args}`
+             end
 
-    { :ok => $?.success?, :out => output }
+    { ok: $?.success?, out: output }
   end
 end

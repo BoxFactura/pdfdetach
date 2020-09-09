@@ -37,6 +37,8 @@ v\:%:
 	@make -s version dev TAG=v$* CMD='bash -c "make $(TASK);exit"'
 
 define RUBY_VERSION_FILE
+# frozen_string_literal: true
+
 class PDFDetach
   VERSION = '$(MAJOR).$(subst v,,$(TAG)).$(PATCH)'
   LIB_TARGET = '$(subst v,,$(TAG)).04'
@@ -44,6 +46,22 @@ end
 endef
 
 export RUBY_VERSION_FILE
+
+define INGORED_LIBS
+libc.so.6
+libdl.so.2
+libexpat.so.1
+libgcc_s.so.1
+liblzma.so.5
+libm.so.6
+libthread.so.0
+libstdc++.so.6
+libuuid.so.1
+libz.so.1
+libzstd.so.1
+endef
+
+export IGNORED_LIBS
 
 fetch:
 	@(git fetch origin $(TAG) 2> /dev/null || (\
@@ -67,6 +85,7 @@ release: target version
 	@(git worktree add $(PKG) $(TAG) && (cp -r .backup/* $(PKG) > /dev/null 2>&1)) || true
 
 	@cd $(PKG) && echo "bin/*\n!bin/$(subst v,,$(TAG)).04" > .gitignore && git add .
+	@cd $(PKG) && echo "$$IGNORED_LIBS" >> .gitignore && git add .
 	@cd $(PKG) && git commit -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) ($(shell date))" || true
 	@rm -rf .backup
 

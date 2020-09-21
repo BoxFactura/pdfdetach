@@ -6,7 +6,6 @@ require 'pathname'
 #
 class PDFDetach
   # @param filepath [String]
-  # @param binary_path [String|Nil]
   def initialize(filepath)
     @src = filepath
     @base_path = Pathname.new("#{__dir__}/../../bin/#{LIB_TARGET}").cleanpath

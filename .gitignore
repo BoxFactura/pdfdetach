@@ -4,3 +4,4 @@ Gemfile.lock
 pdfdetach/.gitignore
 */bin
 tmp
+pdfdetach/tmp

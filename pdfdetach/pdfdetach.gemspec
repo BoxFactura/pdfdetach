@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 $:.push File.expand_path('../lib', __FILE__)
 require 'pdfdetach/version'
 require 'pdfdetach/main'
@@ -9,11 +10,11 @@ Gem::Specification.new do |s|
   s.authors     = ['Alvaro Cabrera']
   s.email       = ['pateketrueke@gmail.com']
   s.homepage    = 'https://github.com/pateketrueke/pdfdetach'
-  s.summary     = %q{Ruby wrapper for pdfdetach executable}
+  s.summary     = %(Ruby wrapper for pdfdetach executable)
 
-  s.description = %q{Binaries for pdfdetach (poppler-utils) that runs on Ubuntu}
+  s.description = %{Binaries for pdfdetach (poppler-utils) that runs on Ubuntu}
 
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'test-unit', '>= 2.3.0'
+  s.add_development_dependency 'minitest'
 end

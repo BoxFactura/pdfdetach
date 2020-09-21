@@ -2,52 +2,55 @@
 
 require 'pathname'
 
-# :nodoc:
+# PDFDetach is wrapper around poppler's pdfdetach utils command
+#
 class PDFDetach
   # @param filepath [String]
-  # @param binary_path [String]
-  def initialize(filepath, binary_path: '')
+  def initialize(filepath)
     @src = filepath
     @base_path = Pathname.new("#{__dir__}/../../bin/#{LIB_TARGET}").cleanpath
-    @binary_path = binary_path
+    @binary_path = PDFDetach.configuration.binary_path
   end
 
-  def get_opts(hash)
+  # @param options [Hash]
+  def get_opts(options)
     args = String.new
-    args << " -o #{hash[:output]} " if hash[:output]
-    args << " -enc #{hash[:encoding]} " if hash[:encoding]
-    args << " -opw #{hash[:owner_password]} " if hash[:owner_password]
-    args << " -upw #{hash[:user_password]} " if hash[:user_password]
+    args << " -o #{options[:output]} " if options[:output]
+    args << " -enc #{options[:encoding]} " if options[:encoding]
+    args << " -opw #{options[:owner_password]} " if options[:owner_password]
+    args << " -upw #{options[:user_password]} " if options[:user_password]
     args
   end
 
+  # List all files attached
+  #
+  # @return [Array]
+  #
   def list
     result = run("-list #{@src}")
 
-    files = if result[:ok]
-              result[:out].split("\n").map do |line|
-                next line.match(/^(\d+): (.+?)$/) { |m| m[2] } if line =~ /^(\d+):/
-              end
-            else
-              []
-            end
-    files.compact
+    list ||= if result[:ok]
+               result[:out].split("\n").map do |line|
+                 next line.match(/^(\d+): (.+?)$/) { |m| m[2] } if line =~ /^(\d+):/
+               end
+             else
+               []
+             end
+    list.compact
   end
 
-  def save(offset, opts = {})
-    run("-save #{offset} #{get_opts(opts)} #{@src}")[:ok]
+  # Save all attached files in the pdf
+  #
+  # @param options [Hash]
+  #
+  def saveall(options = {})
+    run("-saveall #{get_opts(options)} #{@src}")[:ok]
   end
 
-  def savefile(filename, opts = {})
-    run("-savefile #{filename} #{get_opts(opts)} #{@src}")[:ok]
-  end
-
-  def saveall(opts = {})
-    run("-saveall #{get_opts(opts)} #{@src}")[:ok]
-  end
+  private
 
   def run(args)
-    output = if @binary_path&.empty?
+    output = if @binary_path.nil? || @binary_path&.empty?
                `LD_LIBRARY_PATH=#{@base_path}/lib #{@base_path}/pdfdetach #{args}`
              else
                `#{@binary_path} #{args}`

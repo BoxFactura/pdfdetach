@@ -47,7 +47,7 @@ endef
 
 export RUBY_VERSION_FILE
 
-define INGORED_LIBS
+define IGNORED_LIBS
 libc.so.6
 libdl.so.2
 libexpat.so.1
@@ -84,7 +84,7 @@ release: target version
 	@(git worktree remove $(PKG) --force > /dev/null 2>&1) || true
 	@(git worktree add $(PKG) $(TAG) && (cp -r .backup/* $(PKG) > /dev/null 2>&1)) || true
 
-	@cd $(PKG) && echo "bin/*\n!bin/$(subst v,,$(TAG)).04" > .gitignore && git add .
+	@cd $(PKG) && echo "bin/*\n!bin/$(subst v,,$(TAG)).04" >> .gitignore && git add .
 	@cd $(PKG) && echo "$$IGNORED_LIBS" >> .gitignore && git add .
 	@cd $(PKG) && git commit -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) ($(shell date))" || true
 	@rm -rf .backup

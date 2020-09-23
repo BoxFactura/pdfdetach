@@ -49,8 +49,8 @@ export RUBY_VERSION_FILE
 
 define IGNORED_LIBS
 bin/*
-bin/$(subst v,,$(TAG)).04/lib/libc.so.6
 !bin/$(subst v,,$(TAG)).04
+libc.so.6
 libdl.so.2
 libexpat.so.1
 libgcc_s.so.1

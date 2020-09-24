@@ -44,3 +44,9 @@ Until released, you can require it this way:
 # Gemfile
 gem 'pdfdetach', git: 'https://github.com/pateketrueke/pdfdetach.git', tag: 'v0.20.0'
 ```
+
+## Licensing
+
+This gem is available as open source under the terms of the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.txt)
+
+[Poppler](https://gitlab.freedesktop.org/poppler/poppler) is licensed under the [GNU General Public License v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt)

@@ -38,11 +38,11 @@ The `make release` task will care about the versioning bits, it will commit on a
 
 ## Using this module
 
-Until released, you can require it this way:
+Include it in your Gemfile, make sure to set the version to the Ubuntu release you'll be using it on.
 
 ```ruby
-# Gemfile
-gem 'pdfdetach', git: 'https://github.com/pateketrueke/pdfdetach.git', tag: 'v0.20.0'
+# For Ubuntu 20.04
+gem 'pdfdetach', '0.20.1'
 ```
 
 ## Licensing

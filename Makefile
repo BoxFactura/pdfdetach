@@ -56,7 +56,7 @@ libexpat.so.1
 libgcc_s.so.1
 liblzma.so.5
 libm.so.6
-libthread.so.0
+libpthread.so.0
 libstdc++.so.6
 libuuid.so.1
 libz.so.1
@@ -90,9 +90,11 @@ release: target version
 	@cd $(PKG) && git commit -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) ($(shell date))" || true
 	@rm -rf .backup
 
-	@git push origin $(TAG) -f || true
-	@git tag -f -a v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) $(TAG) -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH)" || true
-	@git push -f origin : v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) || true
+	@git tag -a v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) $(TAG) -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH)" || true
+
+push-relase:
+	@git push origin $(TAG) || true
+	@git push origin : v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) || true
 
 install:
 	@./install.sh

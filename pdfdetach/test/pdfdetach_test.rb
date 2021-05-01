@@ -34,7 +34,7 @@ class PDFDetachTest < TestCase
     pdf = PDFDetach.new('test/fixtures/example_041.pdf')
     files = pdf.list
     pdf.saveall({ output: output_path })
-    files.each do |file| 
+    files.each do |file|
       assert File.exist?("#{output_path}/#{file}")
     end
   end

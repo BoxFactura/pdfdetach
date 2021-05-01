@@ -92,7 +92,7 @@ release: target version
 
 	@git tag -a v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) $(TAG) -m "Release v$(MAJOR).$(subst v,,$(TAG)).$(PATCH)" || true
 
-push-relase:
+push-release:
 	@git push origin $(TAG) || true
 	@git push origin : v$(MAJOR).$(subst v,,$(TAG)).$(PATCH) || true
 

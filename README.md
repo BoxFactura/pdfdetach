@@ -7,7 +7,7 @@ Include it in your Gemfile, make sure to set the version to the Ubuntu release y
 
 ```ruby
 # For Ubuntu 20.04
-gem 'pdfdetach', '0.20.1'
+gem 'pdfdetach', '0.20.3'
 ```
 
 ## Usage
